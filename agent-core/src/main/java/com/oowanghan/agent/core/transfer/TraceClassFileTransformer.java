@@ -27,7 +27,7 @@ public class TraceClassFileTransformer implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
-        if (!className.contains("HelloWorld")){
+        if (!className.contains(pattern)){
             return classfileBuffer;
         }
         System.out.println("agent:" + className);

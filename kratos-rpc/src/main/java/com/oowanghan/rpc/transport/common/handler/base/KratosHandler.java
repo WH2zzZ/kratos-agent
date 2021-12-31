@@ -23,4 +23,6 @@ public abstract class KratosHandler implements BaseHandler, UrlHandler {
     public InetSocketAddress getInetSocketAddress() {
         return new InetSocketAddress(url.getIp(), url.getPort());
     }
+
+    public abstract boolean isConnect();
 }

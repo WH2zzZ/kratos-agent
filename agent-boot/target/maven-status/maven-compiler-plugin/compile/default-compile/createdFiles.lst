@@ -1,2 +1,2 @@
+com/oowanghan/agent/boot/AgentLauncher.class
 com/oowanghan/agent/boot/classloader/AgentClassloader.class
-com/oowanghan/agent/boot/AgentBootStarter.class

@@ -11,7 +11,7 @@ public interface BaseHandler {
 
     void disconnected(ChannelHandlerContext context);
 
-    void sent(Object message);
+    void sent(Object message, Url url);
 
     void received(ChannelHandlerContext context, Object message);
 

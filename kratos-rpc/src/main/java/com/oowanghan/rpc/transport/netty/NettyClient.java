@@ -1,5 +1,6 @@
 package com.oowanghan.rpc.transport.netty;
 
+import com.oowanghan.rpc.transport.common.handler.base.KratosHandler;
 import com.oowanghan.rpc.transport.protocol.entity.Url;
 import com.oowanghan.rpc.transport.common.handler.register.RegisterClientHandler;
 import com.oowanghan.rpc.transport.common.util.Codec;
@@ -31,19 +32,15 @@ public class NettyClient {
 
     private Url url;
 
-    public NettyClient(Url url) {
-        this.bindAddress = new InetSocketAddress(url.getIp(), url.getPort());
-        this.url = url;
-    }
-
-    public void open() {
+    public void connect(KratosHandler kratosHandler) {
         bootstrap = new Bootstrap();
 
         workerGroup = new NioEventLoopGroup(
                 Math.min(Runtime.getRuntime().availableProcessors() + 1, 32),
                 new DefaultThreadFactory("KratosClientWorker", false));
 
-        ChannelDuplexHandler serverHandler = ChannelHandlerFactory.getClientHandler(url);
+        this.url = kratosHandler.getUrl();
+        this.bindAddress = new InetSocketAddress(url.getIp(), url.getPort());
 
         bootstrap
                 .group(workerGroup)
@@ -54,7 +51,7 @@ public class NettyClient {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast("encoder", Codec.getEncoder(url));
                         pipeline.addLast("decoder", Codec.getDecode(url));
-                        pipeline.addLast(serverHandler);
+                        pipeline.addLast(new NettyServerHandler(kratosHandler));
                     }
                 }).option(ChannelOption.SO_KEEPALIVE, true);
 

@@ -37,7 +37,6 @@ public class NettyServer {
                 new DefaultThreadFactory("KratosServerWorker", false));
 
         Url url = handler.getUrl();
-        ChannelDuplexHandler duplexHandler = ChannelHandlerFactory.getServerHandler(url);
         bootstrap
                 .group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)

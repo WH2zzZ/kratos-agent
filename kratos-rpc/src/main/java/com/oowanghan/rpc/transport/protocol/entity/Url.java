@@ -19,16 +19,19 @@ public class Url implements Serializable {
 
     private final String address;
 
+    private final String serverName;
+
     private final int heartBeatMilliSecond = 60_000;
 
     private final InvokeType invokeType;
 
     protected String protocol;
 
-    private Url(String address, String protocol, InvokeType invokerType) {
+    private Url(String address, String protocol, InvokeType invokerType, String serverName) {
         this.address = address;
         this.protocol = protocol;
         this.invokeType = invokerType;
+        this.serverName = serverName;
         int ipIndex = address.lastIndexOf(":");
         ip = address.substring(0, ipIndex);
         port = Integer.parseInt(address.substring(ipIndex + 1));
@@ -44,8 +47,9 @@ public class Url implements Serializable {
 
         String protocol = urlInfoArr[0];
         String address = path[0];
-        InvokeType invokeType = InvokeType.getByType(path[1]);
-        return new Url(address, protocol, invokeType);
+        String serverName = path[1];
+        InvokeType invokeType = InvokeType.getByType(path[2]);
+        return new Url(address, protocol, invokeType, serverName);
     }
 
     public String getIp() {
@@ -78,9 +82,40 @@ public class Url implements Serializable {
                 "ip='" + ip + '\'' +
                 ", port=" + port +
                 ", address='" + address + '\'' +
+                ", serverName='" + serverName + '\'' +
                 ", heartBeatMilliSecond=" + heartBeatMilliSecond +
                 ", invokeType=" + invokeType +
                 ", protocol='" + protocol + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Url url = (Url) o;
+
+        if (port != url.port) return false;
+        if (heartBeatMilliSecond != url.heartBeatMilliSecond) return false;
+        if (!ip.equals(url.ip)) return false;
+        if (!address.equals(url.address)) return false;
+        if (!serverName.equals(url.serverName)) return false;
+        if (invokeType != url.invokeType) return false;
+        if (!protocol.equals(url.protocol)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ip.hashCode();
+        result = 31 * result + port;
+        result = 31 * result + address.hashCode();
+        result = 31 * result + serverName.hashCode();
+        result = 31 * result + heartBeatMilliSecond;
+        result = 31 * result + invokeType.hashCode();
+        result = 31 * result + protocol.hashCode();
+        return result;
     }
 }

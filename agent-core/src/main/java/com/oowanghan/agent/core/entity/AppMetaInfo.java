@@ -49,7 +49,6 @@ public class AppMetaInfo {
     }
 
     private static class AppMetaInfoInstance {
-
         private final static AppMetaInfo INSTANCE = new AppMetaInfo();
     }
     public static AppMetaInfo getInstance() {

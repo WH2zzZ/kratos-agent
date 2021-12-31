@@ -11,7 +11,7 @@ import com.oowanghan.rpc.transport.protocol.entity.Url;
 public class InvokerNettyClient {
 
     public static void main(String[] args) {
-        new NettyClient(Url.valueOf("java://127.0.0.1:8082/invoker")).open();
+//        new NettyClient(Url.valueOf("java://127.0.0.1:8082/invoker")).open();
 
     }
 }

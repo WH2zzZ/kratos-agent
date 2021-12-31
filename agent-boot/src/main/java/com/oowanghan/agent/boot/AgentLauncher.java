@@ -42,8 +42,8 @@ public class AgentLauncher {
         Class<?> coreStartClass = agentClassloader.loadClass("com.oowanghan.agent.core.AgenterCoreStarter");
         Object coreStartInstance = coreStartClass.getConstructors()[0].newInstance();
 
-        Method startMethod = coreStartClass.getDeclaredMethod("start");
-        startMethod.invoke(coreStartInstance);
+        Method startMethod = coreStartClass.getDeclaredMethod("start", Instrumentation.class);
+        startMethod.invoke(coreStartInstance, inst);
     }
 
     /**

@@ -2,8 +2,10 @@ package com.oowanghan.agent.core;
 
 import com.oowanghan.agent.core.entity.AppMetaInfo;
 import com.oowanghan.agent.core.entity.SystemMetaInfo;
+import com.oowanghan.agent.core.transfer.TraceClassFileTransformer;
 
 import java.io.File;
+import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 
@@ -13,7 +15,7 @@ import java.lang.management.RuntimeMXBean;
  */
 public class AgenterCoreStarter {
 
-    public void start() {
+    public void start(Instrumentation ins) {
         ClassLoader classLoader = AgenterCoreStarter.class.getClassLoader();
         System.out.println(classLoader);
         System.out.println("主程序运行前");
@@ -38,6 +40,8 @@ public class AgenterCoreStarter {
         System.out.println("user.dir : " + System.getProperty("user.dir"));
         System.out.println(SystemMetaInfo.getInstance());
         System.out.println(AppMetaInfo.getInstance());
+        System.out.println("1");
+        ins.addTransformer(new TraceClassFileTransformer("com.oowanghan"), true);
         System.out.println("agent end");
     }
 
