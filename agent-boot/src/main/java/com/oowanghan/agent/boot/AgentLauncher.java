@@ -28,7 +28,8 @@ public class AgentLauncher {
                 .getLocation()
                 .getFile();
         String parentPath = new File(path).getParent();
-        String coreJarPath = parentPath + File.separator + "agent-core-1.0-SNAPSHOT-jar-with-dependencies.jar";
+        // String coreJarPath = parentPath + File.separator + "agent-core-1.0-SNAPSHOT-jar-with-dependencies.jar";
+        String coreJarPath = parentPath + File.separator + "original-agent-core-1.0-SNAPSHOT.jar";
         String osJarPath = parentPath + File.separator + "oshi-core-5.6.1.jar";
         String jnaPlatformJarPath = parentPath + File.separator + "jna-platform-5.8.0.jar";
         String jnaJarPath = parentPath + File.separator + "jna-5.8.0.jar";
@@ -39,7 +40,7 @@ public class AgentLauncher {
                 new File(jnaJarPath).toURI().toURL()
         };
         AgentClassloader agentClassloader = new AgentClassloader(urls);
-        Class<?> coreStartClass = agentClassloader.loadClass("com.oowanghan.agent.core.AgenterCoreStarter");
+        Class<?> coreStartClass = agentClassloader.loadClass("com.oowanghan.agent.core.AgentCoreStarter");
         Object coreStartInstance = coreStartClass.getConstructors()[0].newInstance();
 
         Method startMethod = coreStartClass.getDeclaredMethod("start", Instrumentation.class);

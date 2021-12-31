@@ -1,10 +1,7 @@
 package com.oowanghan.agent.boot.classloader;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLStreamHandlerFactory;
-import java.util.Enumeration;
 
 /**
  * @Author WangHan
@@ -12,16 +9,8 @@ import java.util.Enumeration;
  */
 public class AgentClassloader extends URLClassLoader {
 
-    public AgentClassloader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
-    }
-
     public AgentClassloader(URL[] urls) {
         super(urls);
-    }
-
-    public AgentClassloader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
-        super(urls, parent, factory);
     }
 
     @Override

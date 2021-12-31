@@ -5,6 +5,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
@@ -15,7 +17,9 @@ import java.security.ProtectionDomain;
  */
 public class TraceClassFileTransformer implements ClassFileTransformer {
 
-    private String pattern;
+    private Logger log = LoggerFactory.getLogger(TraceClassFileTransformer.class);
+
+    private final String pattern;
 
     public TraceClassFileTransformer(String pattern) {
         this.pattern = pattern;
@@ -30,7 +34,7 @@ public class TraceClassFileTransformer implements ClassFileTransformer {
         if (!className.contains(pattern)){
             return classfileBuffer;
         }
-        System.out.println("agent:" + className);
+        log.info("[trace] agent : {}", className);
         ClassReader classReader = new ClassReader(classfileBuffer);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
