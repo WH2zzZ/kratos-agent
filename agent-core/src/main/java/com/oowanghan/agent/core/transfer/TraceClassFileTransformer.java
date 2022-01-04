@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+import java.util.Arrays;
 
 /**
  * @Author WangHan
@@ -34,12 +35,22 @@ public class TraceClassFileTransformer implements ClassFileTransformer {
         if (!className.contains(pattern)){
             return classfileBuffer;
         }
-        log.info("[trace] agent : {}", className);
+        log.info("[trace] ============== start : {} ==============", className);
+        if (log.isDebugEnabled()) {
+            printTraceLog(loader, className, protectionDomain, classfileBuffer);
+        }
         ClassReader classReader = new ClassReader(classfileBuffer);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
         ClassVisitor classVisitor = new MethodInvokeTraceVisitor(Opcodes.ASM9, classWriter, pattern);
         classReader.accept(classVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+        log.info("[trace] =========== end : {} =============", className);
         return classWriter.toByteArray();
+    }
+
+    private void printTraceLog(ClassLoader loader, String className, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
+        log.info("[trace] pattern : {}", pattern);
+        log.info("[trace] classloader : {}", loader);
+        // log.info("[trace] protectionDomain : {}", protectionDomain.toString());
     }
 }

@@ -9,6 +9,8 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.Printer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,9 @@ import java.util.List;
  */
 public class MethodInvokeTraceVisitor extends ClassVisitor {
 
-    private Matcher matcher;
+    private final Logger log = LoggerFactory.getLogger(MethodInvokeTraceVisitor.class);
+
+    private final Matcher matcher;
 
     private boolean isMatcher;
 
@@ -44,6 +48,11 @@ public class MethodInvokeTraceVisitor extends ClassVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+        if (isMatcher) {
+            log.info("[trace-info] bean-name : {}", currentBean);
+            currentBean.getBeanAnnotation().add(descriptor);
+            return super.visitAnnotation(descriptor, visible);
+        }
         isMatcher = matcher.isMatcherBeanByAnnotation(descriptor);
         currentBean.getBeanAnnotation().add(descriptor);
         return super.visitAnnotation(descriptor, visible);
@@ -64,9 +73,10 @@ public class MethodInvokeTraceVisitor extends ClassVisitor {
     }
 
     private static class MethodFindInvokeAdapter extends MethodVisitor {
+        private final Logger log = LoggerFactory.getLogger(MethodFindInvokeAdapter.class);
         private final List<String> list = new ArrayList<>();
 
-        private MethodMetaInfo currentMethod;
+        private final MethodMetaInfo currentMethod;
         private int currentInvokeIndex = 0;
 
         public MethodFindInvokeAdapter(int api, MethodVisitor methodVisitor, MethodMetaInfo methodMetaInfo) {
@@ -77,6 +87,7 @@ public class MethodInvokeTraceVisitor extends ClassVisitor {
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
             String info = String.format("%s %s.%s%s", Printer.OPCODES[opcode], owner, name, descriptor);
+            log.info("[trace-info] message str : {}", info);
             currentMethod.getInvokeMethods().put(currentInvokeIndex++, info);
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
         }

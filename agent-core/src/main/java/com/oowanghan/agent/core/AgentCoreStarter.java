@@ -21,25 +21,31 @@ public class AgentCoreStarter {
     public void start(Instrumentation ins) {
         ClassLoader classLoader = AgentCoreStarter.class.getClassLoader();
         if (log.isDebugEnabled()) {
-            RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
-            log.info("[system] application.name : {}", System.getProperty("application.name"));
-            log.info("[system] classpath : {}", runtimeBean.getSystemProperties());
-            log.info("[system] boot class path: {}", runtimeBean.getBootClassPath());
-            log.info("[system] lib path: {}", runtimeBean.getLibraryPath());
-            log.info("[system] current classloader : {}", this.getClass().getClassLoader());
-
-            log.info("[system] agent runtime mx bean : {}", runtimeBean.getName());
-            //        user.name 用户的账户名称
-            //        user.home 用户的主目录
-            //        user.dir 用户的当前工作目录
-            log.info("[system] user.name : {}", System.getProperty("user.name"));
-            log.info("[system] user.home : {}", System.getProperty("user.home"));
-            log.info("[system] user.dir : {}", System.getProperty("user.dir"));
-            log.info("[system] system : {}", SystemMetaInfo.getInstance());
-            log.info("[system] app : {}", AppMetaInfo.getInstance());
+            printSystemLog();
         }
-        ins.addTransformer(new TraceClassFileTransformer("com.oowanghan"), true);
+        ins.addTransformer(new TraceClassFileTransformer("com/oowanghan"), true);
         log.info("agent end");
+    }
+
+    private void printSystemLog() {
+        RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
+        runtimeBean.getSystemProperties().forEach((key, value) -> log.info("[system] runtime-prop : {} = {}", key, value));
+
+        System.getProperties().forEach((key, value) -> log.info("[system] system-prop : {} = {}", key, value));
+        log.info("[system] application.name : {}", System.getProperty("application.name"));
+        log.info("[system] boot class path: {}", runtimeBean.getBootClassPath());
+        log.info("[system] lib path: {}", runtimeBean.getLibraryPath());
+        log.info("[system] current classloader : {}", this.getClass().getClassLoader());
+
+        log.info("[system] agent runtime mx bean : {}", runtimeBean.getName());
+        //        user.name 用户的账户名称
+        //        user.home 用户的主目录
+        //        user.dir 用户的当前工作目录
+        log.info("[system] user.name : {}", System.getProperty("user.name"));
+        log.info("[system] user.home : {}", System.getProperty("user.home"));
+        log.info("[system] user.dir : {}", System.getProperty("user.dir"));
+        log.info("[system] system : {}", SystemMetaInfo.getInstance());
+        log.info("[system] app : {}", AppMetaInfo.getInstance());
     }
 
 }

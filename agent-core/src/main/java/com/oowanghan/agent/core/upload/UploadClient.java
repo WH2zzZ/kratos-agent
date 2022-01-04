@@ -1,6 +1,8 @@
 package com.oowanghan.agent.core.upload;
 
 import com.oowanghan.agent.core.entity.MethodMetaInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Author WangHan
@@ -8,8 +10,9 @@ import com.oowanghan.agent.core.entity.MethodMetaInfo;
  */
 public class UploadClient {
 
-//    private static final Logger log = LoggerFactory.getLogger(UploadClient.class);
+   private static final Logger log = LoggerFactory.getLogger(UploadClient.class);
 
     public static void upload(MethodMetaInfo methodMetaInfo){
+        log.info("[trace-info] method info : {}", methodMetaInfo);
     }
 }

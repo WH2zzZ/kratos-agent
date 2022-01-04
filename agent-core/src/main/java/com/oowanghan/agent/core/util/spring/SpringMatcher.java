@@ -1,6 +1,8 @@
 package com.oowanghan.agent.core.util.spring;
 
 import com.oowanghan.agent.core.util.common.Matcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Author WangHan
@@ -8,7 +10,7 @@ import com.oowanghan.agent.core.util.common.Matcher;
  */
 public class SpringMatcher implements Matcher {
 
-//    public static final Logger log = LoggerFactory.getLogger(SpringMatcher.class);
+   public static final Logger log = LoggerFactory.getLogger(SpringMatcher.class);
 
     public static final String CONTROLLER = "Controller";
     public static final String SERVICE = "Service";
@@ -19,7 +21,7 @@ public class SpringMatcher implements Matcher {
     public boolean isMatcherBeanByAnnotation(String descriptor) {
         boolean isMatcher = descriptor.contains(CONTROLLER) || descriptor.contains(SERVICE) ||
                 descriptor.contains(REPOSITORY) || descriptor.contains(RESOURCE);
-//        log.info("match annotation : {} - {}", descriptor, isMatcher);
+       log.info("[trace-info] match annotation : {} - {}", descriptor, isMatcher);
         return isMatcher;
     }
 }
