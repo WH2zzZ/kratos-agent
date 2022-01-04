@@ -5,6 +5,7 @@ import com.oowanghan.agent.core.entity.MethodMetaInfo;
 import com.oowanghan.agent.core.upload.UploadClient;
 import com.oowanghan.agent.core.util.common.Matcher;
 import com.oowanghan.agent.core.util.common.PatternFactory;
+import com.oowanghan.agent.core.util.matcher.SpringMatcher;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -53,21 +54,21 @@ public class MethodInvokeTraceVisitor extends ClassVisitor {
             currentBean.getBeanAnnotation().add(descriptor);
             return super.visitAnnotation(descriptor, visible);
         }
-        isMatcher = matcher.isMatcherBeanByAnnotation(descriptor);
+        isMatcher = matcher.isMatch(descriptor) && new SpringMatcher().isMatch(descriptor);
         currentBean.getBeanAnnotation().add(descriptor);
         return super.visitAnnotation(descriptor, visible);
     }
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        if (isMatcher){
+        if (isMatcher && !"<init>".equals(name)){
             MethodMetaInfo methodMetaInfo = new MethodMetaInfo();
             methodMetaInfo.setMethodName(name);
             methodMetaInfo.setAccessFlag(access);
             methodMetaInfo.setMethodDescription(descriptor);
-            methodMetaInfo.setClassInfo(currentBean);
+//            methodMetaInfo.setClassInfo(currentBean);
             methodMetaInfo.setInvokeMethods(new HashMap<>(64));
-            return new MethodFindInvokeAdapter(api, null, methodMetaInfo);
+            return new MethodFindInvokeAdapter(api, null, methodMetaInfo, matcher);
         }
         return super.visitMethod(access, name, descriptor, signature, exceptions);
     }
@@ -77,16 +78,23 @@ public class MethodInvokeTraceVisitor extends ClassVisitor {
         private final List<String> list = new ArrayList<>();
 
         private final MethodMetaInfo currentMethod;
+        private final Matcher matcher;
         private int currentInvokeIndex = 0;
 
-        public MethodFindInvokeAdapter(int api, MethodVisitor methodVisitor, MethodMetaInfo methodMetaInfo) {
+        public MethodFindInvokeAdapter(int api, MethodVisitor methodVisitor, MethodMetaInfo methodMetaInfo, Matcher matcher) {
             super(api, methodVisitor);
             this.currentMethod = methodMetaInfo;
+            this.matcher = matcher;
         }
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
-            String info = String.format("%s %s.%s%s", Printer.OPCODES[opcode], owner, name, descriptor);
+
+            if (!matcher.isMatch(owner)){
+                super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+            }
+
+            String info = String.format("%s %s.%s", Printer.OPCODES[opcode], owner, name);
             log.info("[trace-info] message str : {}", info);
             currentMethod.getInvokeMethods().put(currentInvokeIndex++, info);
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);

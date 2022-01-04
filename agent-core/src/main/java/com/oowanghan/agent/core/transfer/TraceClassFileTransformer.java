@@ -35,7 +35,7 @@ public class TraceClassFileTransformer implements ClassFileTransformer {
         if (!className.contains(pattern)){
             return classfileBuffer;
         }
-        log.info("[trace] ============== start : {} ==============", className);
+//        log.info("[trace] ============== start : {} ==============", className);
         if (log.isDebugEnabled()) {
             printTraceLog(loader, className, protectionDomain, classfileBuffer);
         }
@@ -44,7 +44,7 @@ public class TraceClassFileTransformer implements ClassFileTransformer {
 
         ClassVisitor classVisitor = new MethodInvokeTraceVisitor(Opcodes.ASM9, classWriter, pattern);
         classReader.accept(classVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-        log.info("[trace] =========== end : {} =============", className);
+//        log.info("[trace] =========== end : {} =============", className);
         return classWriter.toByteArray();
     }
 

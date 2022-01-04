@@ -18,7 +18,7 @@ public class MethodMetaInfo {
 
     private String methodDescription;
 
-    private BeanMetaInfo classInfo;
+//    private BeanMetaInfo classInfo;
 
     private Map<Integer, String> invokeMethods;
 
@@ -55,13 +55,13 @@ public class MethodMetaInfo {
         this.methodDescription = methodDescription;
     }
 
-    public BeanMetaInfo getClassInfo() {
-        return classInfo;
-    }
+//    public BeanMetaInfo getClassInfo() {
+//        return classInfo;
+//    }
 
-    public void setClassInfo(BeanMetaInfo classInfo) {
-        this.classInfo = classInfo;
-    }
+//    public void setClassInfo(BeanMetaInfo classInfo) {
+//        this.classInfo = classInfo;
+//    }
 
     public Map<Integer, String> getInvokeMethods() {
         return invokeMethods;
@@ -78,7 +78,7 @@ public class MethodMetaInfo {
                 ", accessFlag='" + accessFlag + '\'' +
                 ", methodAnnotation='" + methodAnnotation + '\'' +
                 ", methodDescription='" + methodDescription + '\'' +
-                ", classInfo=" + classInfo +
+//                ", classInfo=" + classInfo +
                 ", invokeMethods=" + invokeMethods +
                 '}';
     }

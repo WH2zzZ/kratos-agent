@@ -1,4 +1,4 @@
-package com.oowanghan.agent.core.util.spring;
+package com.oowanghan.agent.core.util.matcher;
 
 import com.oowanghan.agent.core.util.common.Matcher;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ public class SpringMatcher implements Matcher {
     public static final String RESOURCE = "Deprecated";
 
     @Override
-    public boolean isMatcherBeanByAnnotation(String descriptor) {
+    public boolean isMatch(String descriptor) {
         boolean isMatcher = descriptor.contains(CONTROLLER) || descriptor.contains(SERVICE) ||
                 descriptor.contains(REPOSITORY) || descriptor.contains(RESOURCE);
        log.info("[trace-info] match annotation : {} - {}", descriptor, isMatcher);

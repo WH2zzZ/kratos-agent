@@ -1,7 +1,8 @@
 package com.oowanghan.agent.core.util.common;
 
 import com.oowanghan.agent.core.constant.PatternConstant;
-import com.oowanghan.agent.core.util.spring.SpringMatcher;
+import com.oowanghan.agent.core.util.matcher.BeanNameMatcher;
+import com.oowanghan.agent.core.util.matcher.SpringMatcher;
 
 /**
  * 模式工厂类
@@ -10,13 +11,14 @@ import com.oowanghan.agent.core.util.spring.SpringMatcher;
  */
 public class PatternFactory {
 
-    private static SpringMatcher springMatcher = new SpringMatcher();
+    private static final SpringMatcher springMatcher = new SpringMatcher();
+    private static final BeanNameMatcher beanNameMatcher = new BeanNameMatcher();
 
-    public static final SpringMatcher getMatcher(String pattern){
+    public static final Matcher getMatcher(String pattern){
         switch (pattern){
             case PatternConstant.SPRING:
             default:
-                return springMatcher;
+                return beanNameMatcher;
         }
     }
 }

@@ -12,5 +12,5 @@ public interface Matcher {
      * @return
      * @param descriptor
      */
-    boolean isMatcherBeanByAnnotation(String descriptor);
+    boolean isMatch(String descriptor);
 }
